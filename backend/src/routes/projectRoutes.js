@@ -4,30 +4,68 @@ import {
   create,
   getAll,
   getOne,
+  getMine,
+  update,
+  remove,
 } from "../controllers/projectController.js";
 
-import { createProjectValidation } from "../validations/projectValidation.js";
+import {
+  createProjectValidation,
+  updateProjectValidation,
+} from "../validations/projectValidation.js";
 
 import validate from "../middlewares/validate.js";
 import authenticate from "../middlewares/authenticate.js";
-import authorize from "../middlewares/authorize.js";
-
-import ROLES from "../constants/roles.js";
 
 const router = express.Router();
 
-// Public Routes
-router.get("/", getAll);
-router.get("/:id", getOne);
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
 
-// Student Only
+router.get("/", getAll);
+
+/*
+|--------------------------------------------------------------------------
+| Protected Routes
+|--------------------------------------------------------------------------
+*/
+
+// Get logged-in user's projects
+router.get(
+  "/me",
+  authenticate,
+  getMine
+);
+
+// Create project
 router.post(
   "/",
   authenticate,
-  authorize(ROLES.STUDENT),
   createProjectValidation,
   validate,
   create
 );
+
+// Update project
+router.put(
+  "/:id",
+  authenticate,
+  updateProjectValidation,
+  validate,
+  update
+);
+
+// Delete project
+router.delete(
+  "/:id",
+  authenticate,
+  remove
+);
+
+// Get project by ID
+router.get("/:id", getOne);
 
 export default router;

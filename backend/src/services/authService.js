@@ -1,4 +1,4 @@
-import User from "../models/User.js";
+import User from "../models/user.js";
 import ApiError from "../utils/ApiError.js";
 import generateToken from "../utils/generateToken.js";
 import HTTP_STATUS from "../constants/httpStatus.js";
@@ -71,4 +71,27 @@ export const loginUser = async (userData) => {
     user,
     token,
   };
+};
+
+export const updateUserProfile = async (userId, profileData) => {
+  const { name, bio, avatar, skills, githubUrl, linkedinUrl, portfolioUrl, location } = profileData;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(HTTP_STATUS.NOT_FOUND, "User not found");
+  }
+
+  if (name !== undefined) user.name = name;
+  if (bio !== undefined) user.bio = bio;
+  if (avatar !== undefined) user.avatar = avatar;
+  if (skills !== undefined) user.skills = skills;
+  if (githubUrl !== undefined) user.githubUrl = githubUrl;
+  if (linkedinUrl !== undefined) user.linkedinUrl = linkedinUrl;
+  if (portfolioUrl !== undefined) user.portfolioUrl = portfolioUrl;
+  if (location !== undefined) user.location = location;
+
+  await user.save();
+
+  return user;
 };

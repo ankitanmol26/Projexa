@@ -48,6 +48,35 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+    skills: {
+      type: [String],
+      default: [],
+    },
+
+    githubUrl: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    linkedinUrl: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    portfolioUrl: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    location: {
+      type: String,
+      trim: true,
+      default: "",
+    },
   },
   {
     timestamps: true,

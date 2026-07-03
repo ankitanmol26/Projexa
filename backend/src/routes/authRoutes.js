@@ -4,6 +4,7 @@ import {
   register,
   login,
   getMe,
+  updateProfile,
 } from "../controllers/authController.js";
 
 import {
@@ -45,6 +46,13 @@ router.get(
   "/me",
   authenticate,
   getMe
+);
+
+// Update Profile Detail
+router.put(
+  "/profile",
+  authenticate,
+  updateProfile
 );
 
 export default router;

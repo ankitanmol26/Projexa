@@ -4,6 +4,7 @@ import HTTP_STATUS from "../constants/httpStatus.js";
 import {
   registerUser,
   loginUser,
+  updateUserProfile,
 } from "../services/authService.js";
 
 /**
@@ -57,6 +58,23 @@ export const getMe = asyncHandler(async (req, res) => {
       HTTP_STATUS.OK,
       "User profile fetched successfully",
       req.user
+    )
+  );
+});
+
+/**
+ * @desc    Update current logged-in user profile
+ * @route   PUT /api/v1/auth/profile
+ * @access  Private
+ */
+export const updateProfile = asyncHandler(async (req, res) => {
+  const updatedUser = await updateUserProfile(req.user._id, req.body);
+
+  return res.status(HTTP_STATUS.OK).json(
+    new ApiResponse(
+      HTTP_STATUS.OK,
+      "Profile updated successfully",
+      updatedUser
     )
   );
 });

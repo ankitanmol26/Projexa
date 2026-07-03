@@ -1,0 +1,178 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Light Mode (default) — clean white/slate palette
+   Dark Mode  — deep slate/navy palette
+   Toggled by adding/removing class="dark" on <html>
+   ============================================================ */
+
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* light-mode defaults */
+  --bg-base: #f8fafc;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-surface: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border-color: rgba(148, 163, 184, 0.3);
+  --navbar-bg: rgba(248, 250, 252, 0.92);
+  --input-bg: #ffffff;
+  --input-border: #cbd5e1;
+  --input-text: #0f172a;
+  --tag-bg: #e2e8f0;
+  --tag-text: #334155;
+}
+
+html.dark {
+  --bg-base: #0a0e17;
+  --bg-card: rgba(13, 20, 35, 0.72);
+  --bg-surface: rgba(17, 24, 43, 0.85);
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --navbar-bg: rgba(10, 14, 23, 0.94);
+  --input-bg: rgba(10, 14, 23, 0.95);
+  --input-border: #1e293b;
+  --input-text: #f8fafc;
+  --tag-bg: rgba(30, 41, 59, 0.8);
+  --tag-text: #cbd5e1;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode body gradient */
+html.dark body {
+  background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.15), transparent 25%),
+    radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.06), transparent 30%),
+    linear-gradient(180deg, #0a0e17 0%, #0c111d 46%, #080a10 100%);
+}
+
+/* Light mode body gradient */
+html:not(.dark) body {
+  background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.06), transparent 25%),
+    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(99, 102, 241, 0.24);
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   Component Layer
+   ============================================================ */
+@layer components {
+
+  /* ---- Cards ---- */
+  .glass-card {
+    @apply rounded-[32px] border backdrop-blur-xl shadow-soft;
+    border-color: var(--border-color);
+    background-color: var(--bg-card);
+  }
+
+  .surface-card {
+    @apply rounded-3xl shadow-soft border;
+    border-color: var(--border-color);
+    background-color: var(--bg-surface);
+  }
+
+  /* ---- Buttons ---- */
+  .primary-button {
+    @apply inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-500 to-violet-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-500/20 transition duration-300 ease-out hover:-translate-y-0.5 hover:shadow-sky-500/30 focus:outline-none focus:ring-2 focus:ring-sky-400 cursor-pointer;
+  }
+
+  .secondary-button {
+    @apply inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold transition duration-300 ease-out focus:outline-none focus:ring-2 cursor-pointer;
+    border: 1px solid var(--input-border);
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+  }
+
+  .secondary-button:hover {
+    border-color: var(--text-muted);
+  }
+
+  /* ---- Input ---- */
+  .input-field {
+    @apply w-full rounded-2xl px-4 py-3 text-sm outline-none transition duration-200 focus:ring-2 focus:ring-sky-500/20;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--input-text);
+  }
+
+  .input-field::placeholder {
+    color: var(--text-muted);
+  }
+
+  .input-field:focus {
+    border-color: #38bdf8;
+  }
+
+  .form-input {
+    @apply w-full rounded-2xl px-4 py-3 text-sm outline-none transition duration-200 border;
+    border-color: var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--input-text);
+  }
+
+  .form-input:focus {
+    border-color: #38bdf8;
+    @apply ring-2 ring-sky-500/20;
+  }
+
+  /* ---- Typography ---- */
+  .card-title {
+    @apply text-lg font-semibold tracking-tight;
+    color: var(--text-primary);
+  }
+
+  .card-text {
+    @apply text-sm leading-6;
+    color: var(--text-secondary);
+  }
+
+  .section-heading {
+    @apply text-3xl font-semibold tracking-tight sm:text-4xl;
+    color: var(--text-primary);
+  }
+
+  /* ---- Tags ---- */
+  .tag-pill {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ring-1 ring-inset;
+    background-color: var(--tag-bg);
+    color: var(--tag-text);
+    ring-color: var(--border-color);
+  }
+
+  /* ---- Glow / animated ---- */
+  .animated-glow {
+    @apply bg-gradient-to-r from-sky-500 via-indigo-500 to-violet-500 bg-clip-text text-transparent;
+  }
+}

@@ -4,65 +4,100 @@ import helmet from "helmet";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-import projectRoutes from "./routes/projectRoutes.js";
 
 import authRoutes from "./routes/authRoutes.js";
+import projectRoutes from "./routes/projectRoutes.js";
+import commentRoutes from "./routes/commentRoutes.js";
+
 import notFound from "./middlewares/notFound.js";
 import errorHandler from "./middlewares/errorHandler.js";
+import likeRoutes from "./routes/likeRoutes.js";
 
 const app = express();
 
-// ==============================
-// Global Middlewares
-// ==============================
+/* ======================================================
+   Security Middleware
+====================================================== */
 
-// Security headers
 app.use(helmet());
 
-// Enable CORS
-app.use(cors());
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5175",
+].filter(Boolean);
 
-// Parse JSON requests
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (Postman, curl, server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      callback(new Error(`CORS: origin ${origin} not allowed`));
+    },
+    credentials: true,
+  })
+);
+
+/* ======================================================
+   Request Body Parsers
+====================================================== */
+
 app.use(express.json());
 
-// Parse URL-encoded requests
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
-// Parse cookies
 app.use(cookieParser());
 
-// Compress responses
+/* ======================================================
+   Performance & Logging
+====================================================== */
+
 app.use(compression());
 
-// HTTP request logger
 app.use(morgan("dev"));
-app.use("/api/v1/projects", projectRoutes);
 
-// ==============================
-// Health Check Route
-// ==============================
+/* ======================================================
+   Health Check Route
+====================================================== */
 
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "Welcome to the Projexa Backend API",
+    message: "Welcome to the Projexa Backend API 🚀",
   });
 });
 
-// ==============================
-// API Routes
-// ==============================
+/* ======================================================
+   API Routes
+====================================================== */
 
+// Authentication
 app.use("/api/v1/auth", authRoutes);
 
-// ==============================
-// Error Handling
-// ==============================
+// Projects
+app.use("/api/v1/projects", projectRoutes);
 
-// 404 Handler
+// Comments
+app.use("/api/v1/comments", commentRoutes);
+
+app.use("/api/v1/likes", likeRoutes);
+
+/* ======================================================
+   404 Route Handler
+====================================================== */
+
 app.use(notFound);
 
-// Global Error Handler
+/* ======================================================
+   Global Error Handler
+====================================================== */
+
 app.use(errorHandler);
 
 export default app;

@@ -7,11 +7,10 @@ export default function ProtectedRoute() {
 
   if (loading) {
     return (
-      <div className="min-h-[60vh] grid place-items-center px-4 text-slate-300">
-        <div className="inline-flex items-center gap-3 rounded-3xl border border-white/10 bg-slate-950/80 px-8 py-6 text-sm shadow-soft">
-          <div className="h-4 w-4 animate-pulse rounded-full bg-sky-400"></div>
-          Checking authentication...
-        </div>
+      <div className="flex items-center justify-center py-20">
+        <div className="h-6 w-6 rounded-full border-2 animate-spin"
+          style={{ borderColor: 'var(--border-strong)', borderTopColor: 'var(--accent)' }}
+        />
       </div>
     )
   }

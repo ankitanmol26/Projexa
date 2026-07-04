@@ -1,29 +1,24 @@
 ﻿import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { getProject, updateProject } from '../api/projectApi.js'
 import ProjectForm from '../components/project/ProjectForm.jsx'
+import { useToast } from '../context/ToastContext.jsx'
 
 export default function EditProject() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { success, error: toastError } = useToast()
   const [project, setProject] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState('')
+  const [saving, setSaving]   = useState(false)
+  const [error, setError]     = useState('')
 
   useEffect(() => {
-    const loadProject = async () => {
-      setLoading(true)
-      try {
-        const data = await getProject(id)
-        setProject(data)
-      } catch {
-        setError('Unable to load project data.')
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadProject()
+    getProject(id)
+      .then(setProject)
+      .catch(() => setError('Failed to load project.'))
+      .finally(() => setLoading(false))
   }, [id])
 
   const handleSubmit = async (payload) => {
@@ -31,37 +26,40 @@ export default function EditProject() {
     setSaving(true)
     try {
       await updateProject(id, payload)
+      success('Project updated!')
       navigate(`/projects/${id}`, { replace: true })
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Unable to update project.')
-    } finally {
-      setSaving(false)
-    }
+      const msg = err.response?.data?.message || 'Failed to update.'
+      setError(msg); toastError(msg)
+    } finally { setSaving(false) }
   }
 
   if (loading) {
-    return <div className="surface-card h-72 animate-pulse rounded-[40px]" />
+    return (
+      <div className="max-w-2xl mx-auto space-y-4">
+        <div className="h-10 w-48 skeleton rounded-lg" />
+        <div className="h-96 skeleton rounded-xl" />
+      </div>
+    )
   }
 
   return (
-    <div className="space-y-8">
-      <section className="glass-card rounded-[40px] p-8">
-        <div className="space-y-3">
-          <p className="text-sm uppercase tracking-[0.35em] text-sky-500">Edit project</p>
-          <h1 className="section-heading">Update your showcase</h1>
-          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-            Make adjustments and keep your portfolio content polished.
-          </p>
-        </div>
-      </section>
+    <div className="max-w-2xl mx-auto space-y-6 page-enter">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
+        className="page-header">
+        <h1 className="heading-lg">Edit project</h1>
+        <p className="caption mt-1">Update your project details and republish.</p>
+      </motion.div>
 
       {error && (
-        <div className="rounded-2xl border border-rose-400/30 bg-rose-400/10 p-4 text-sm text-rose-500">
+        <div className="rounded-lg px-3.5 py-2.5 text-sm" style={{ background: 'var(--red-dim)', border: '1px solid rgba(239,68,68,0.2)', color: '#F87171' }}>
           {error}
         </div>
       )}
 
-      <ProjectForm initialValue={project} onSubmit={handleSubmit} loading={saving} />
+      <div className="rounded-xl p-6" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', backdropFilter: 'blur(12px)' }}>
+        <ProjectForm initialValue={project} onSubmit={handleSubmit} loading={saving} />
+      </div>
     </div>
   )
 }

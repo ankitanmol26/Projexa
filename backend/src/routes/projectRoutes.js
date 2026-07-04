@@ -16,6 +16,18 @@ import {
 
 import validate from "../middlewares/validate.js";
 import authenticate from "../middlewares/authenticate.js";
+import upload from "../middlewares/upload.js";
+
+const parseTechnologies = (req, res, next) => {
+  if (req.body.technologies && typeof req.body.technologies === "string") {
+    try {
+      req.body.technologies = JSON.parse(req.body.technologies);
+    } catch (err) {
+      // Ignore, let express-validator catch it if invalid
+    }
+  }
+  next();
+};
 
 const router = express.Router();
 
@@ -44,6 +56,8 @@ router.get(
 router.post(
   "/",
   authenticate,
+  upload.array("gallery", 5),
+  parseTechnologies,
   createProjectValidation,
   validate,
   create
@@ -53,6 +67,8 @@ router.post(
 router.put(
   "/:id",
   authenticate,
+  upload.array("gallery", 5),
+  parseTechnologies,
   updateProjectValidation,
   validate,
   update

@@ -1,45 +1,42 @@
 ﻿import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { createProject } from '../api/projectApi.js'
 import ProjectForm from '../components/project/ProjectForm.jsx'
+import { useToast } from '../context/ToastContext.jsx'
 
 export default function CreateProject() {
   const navigate = useNavigate()
+  const { success, error: toastError } = useToast()
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [error, setError]     = useState('')
 
   const handleSubmit = async (payload) => {
     setError('')
     setLoading(true)
     try {
       const created = await createProject(payload)
+      success('Project published! 🚀')
       navigate(`/projects/${created._id || created.id}`, { replace: true })
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Unable to create project.')
-    } finally {
-      setLoading(false)
-    }
+      const msg = err.response?.data?.message || 'Failed to create project.'
+      setError(msg); toastError(msg)
+    } finally { setLoading(false) }
   }
 
   return (
-    <div className="space-y-8">
-      <section className="glass-card rounded-[40px] p-8">
-        <div className="space-y-3">
-          <p className="text-sm uppercase tracking-[0.35em] text-sky-500">New project</p>
-          <h1 className="section-heading">Create a project showcase</h1>
-          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-            Publish your project with a description, links, and technology tags.
-          </p>
-        </div>
-      </section>
+    <div className="max-w-2xl mx-auto space-y-6 page-enter">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
+        className="page-header">
+        <h1 className="heading-lg">Create project</h1>
+        <p className="caption mt-1">Publish your work to the Projexa showcase.</p>
+      </motion.div>
 
-      {error && (
-        <div className="rounded-2xl border border-rose-400/30 bg-rose-400/10 p-4 text-sm text-rose-500">
-          {error}
-        </div>
-      )}
+      {error && <div className="rounded-lg px-3.5 py-2.5 text-sm" style={{ background: 'var(--red-dim)', border: '1px solid rgba(239,68,68,0.2)', color: '#F87171' }}>{error}</div>}
 
-      <ProjectForm onSubmit={handleSubmit} loading={loading} />
+      <div className="rounded-xl p-6" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', backdropFilter: 'blur(12px)' }}>
+        <ProjectForm onSubmit={handleSubmit} loading={loading} />
+      </div>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-﻿export const isValidUrl = (value) => {
+export const isValidUrl = (value) => {
   try {
     if (!value) return true
     new URL(value)
@@ -30,13 +30,17 @@ export const validateAuthPayload = ({ email, password, name }) => {
   return errors
 }
 
-export const validateProjectPayload = ({ title, description, githubUrl, liveDemoUrl }) => {
+export const validateProjectPayload = ({ title, description, technologies, githubUrl, liveDemoUrl }) => {
   const errors = {}
 
   if (!title?.trim()) errors.title = 'Project title is required.'
   if (!description?.trim()) errors.description = 'Project description is required.'
   if (githubUrl && !isValidUrl(githubUrl)) errors.githubUrl = 'Please enter a valid GitHub URL.'
   if (liveDemoUrl && !isValidUrl(liveDemoUrl)) errors.liveDemoUrl = 'Please enter a valid demo URL.'
+  
+  if (!technologies || technologies.length === 0) {
+    errors.technologies = 'At least one technology is required.'
+  }
 
   return errors
 }

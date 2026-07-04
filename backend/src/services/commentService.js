@@ -2,6 +2,7 @@ import Comment from "../models/Comment.js";
 import Project from "../models/Project.js";
 import ApiError from "../utils/ApiError.js";
 import HTTP_STATUS from "../constants/httpStatus.js";
+import { createNotification } from "./notificationService.js";
 
 // Create Comment
 export const createComment = async (projectId, authorId, content) => {
@@ -19,6 +20,16 @@ export const createComment = async (projectId, authorId, content) => {
   // Keep commentsCount in sync
   const totalComments = await Comment.countDocuments({ project: projectId });
   await Project.findByIdAndUpdate(projectId, { commentsCount: totalComments });
+
+  // Notify the project owner (fire-and-forget)
+  const preview = content.length > 80 ? content.substring(0, 80) + '…' : content;
+  createNotification({
+    recipient: project.owner,
+    sender: authorId,
+    type: "comment",
+    project: projectId,
+    message: preview,
+  }).catch(() => {});
 
   return await comment.populate("author", "name email");
 };

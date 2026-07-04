@@ -6,14 +6,14 @@ import HTTP_STATUS from "../constants/httpStatus.js";
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
-  const allowed = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
+  const allowed = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif", "application/pdf"];
   if (allowed.includes(file.mimetype)) {
     cb(null, true);
   } else {
     cb(
       new ApiError(
         HTTP_STATUS.BAD_REQUEST,
-        "Only image files are allowed (jpg, png, webp, gif)"
+        "Only images and PDFs are allowed (jpg, png, webp, gif, pdf)"
       ),
       false
     );

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import ROLES from "../constants/roles.js";
 
 const userSchema = new mongoose.Schema(
@@ -49,6 +50,11 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
+    resume: {
+      type: String,
+      default: "",
+    },
+
     skills: {
       type: [String],
       default: [],
@@ -77,6 +83,42 @@ const userSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
+
+    // Academic information (for student profiles)
+    college: {
+      type: String,
+      trim: true,
+      default: "",
+      maxlength: [120, "College name cannot exceed 120 characters"],
+    },
+
+    branch: {
+      type: String,
+      trim: true,
+      default: "",
+      maxlength: [80, "Branch cannot exceed 80 characters"],
+    },
+
+    graduationYear: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    coverImage: {
+      type: String,
+      default: "",
+    },
+
+    // Password reset
+    resetPasswordToken: {
+      type: String,
+      select: false,
+    },
+    resetPasswordExpire: {
+      type: Date,
+      select: false,
+    },
   },
   {
     timestamps: true,
@@ -100,6 +142,16 @@ userSchema.pre("save", async function () {
  */
 userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+/**
+ * Generate a plain-text reset token, store the hash in DB, return the plain token.
+ */
+userSchema.methods.getResetPasswordToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutes
+  return resetToken;
 };
 
 const User = mongoose.model("User", userSchema);

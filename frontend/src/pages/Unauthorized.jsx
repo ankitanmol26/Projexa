@@ -1,18 +1,24 @@
-﻿import { Link } from 'react-router-dom'
+﻿import { Link, useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 
 export default function Unauthorized() {
+  const navigate = useNavigate()
   return (
-    <div className="flex min-h-[60vh] items-center justify-center px-4">
-      <div className="glass-card max-w-lg w-full rounded-[40px] p-12 text-center">
-        <p className="text-sm uppercase tracking-[0.35em] text-sky-500">Unauthorized</p>
-        <h1 className="section-heading mt-2">Access blocked</h1>
-        <p className="mt-4 text-sm leading-7" style={{ color: 'var(--text-muted)' }}>
-          You need to sign in with the correct account to access this page.
-        </p>
-        <Link to="/login" className="primary-button mt-8 inline-flex">
-          Login now
-        </Link>
-      </div>
+    <div className="flex min-h-[65vh] items-center justify-center px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}
+        className="text-center space-y-5 max-w-sm"
+      >
+        <p className="font-bold" style={{ fontSize: 80, lineHeight: 1, color: 'var(--bg-elevated)', letterSpacing: '-0.04em' }}>401</p>
+        <div>
+          <h1 className="heading-md">Access denied</h1>
+          <p className="body-sm mt-2">You don't have permission to view this page.</p>
+        </div>
+        <div className="flex items-center justify-center gap-3">
+          <button type="button" onClick={() => navigate(-1)} className="btn-secondary btn-sm">← Go back</button>
+          <Link to="/login" className="btn-gradient btn-sm">Sign in</Link>
+        </div>
+      </motion.div>
     </div>
   )
 }

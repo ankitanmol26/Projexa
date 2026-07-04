@@ -1,10 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
   <defs>
-    <linearGradient id="fav-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#3B82F6" />
-      <stop offset="100%" stop-color="#7C3AED" />
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="50%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#22D3EE"/>
     </linearGradient>
   </defs>
-  <path d="M 30,15 H 60 C 78,15 78,45 60,45 H 45 V 85 H 30 Z" fill="url(#fav-gradient)" />
-  <circle cx="60" cy="45" r="6" fill="#06B6D4" />
+  <!-- Circle ring -->
+  <circle cx="22" cy="26" r="15" stroke="url(#g1)" stroke-width="2.5" fill="none" opacity="0.7"/>
+  <!-- P -->
+  <rect x="11" y="17" width="3.8" height="16" rx="1.9" fill="url(#g1)"/>
+  <path d="M14.8 17H21C24.3 17 27 19.5 27 22.5C27 25.5 24.3 28 21 28H14.8"
+        stroke="url(#g1)" stroke-width="3.8" stroke-linecap="round" fill="none"/>
+  <!-- X -->
+  <line x1="28" y1="28" x2="35" y2="35" stroke="url(#g1)" stroke-width="3" stroke-linecap="round"/>
+  <line x1="28" y1="35" x2="35" y2="28" stroke="url(#g1)" stroke-width="3" stroke-linecap="round"/>
+  <!-- Arrow -->
+  <line x1="33" y1="22" x2="40" y2="10" stroke="url(#g2)" stroke-width="3" stroke-linecap="round"/>
+  <polyline points="33,10 40,10 40,17" stroke="url(#g2)" stroke-width="3"
+            stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 </svg>

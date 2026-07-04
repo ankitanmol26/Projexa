@@ -2,6 +2,7 @@ import Like from "../models/Like.js";
 import Project from "../models/Project.js";
 import ApiError from "../utils/ApiError.js";
 import HTTP_STATUS from "../constants/httpStatus.js";
+import { createNotification } from "./notificationService.js";
 
 // Check if the current user has already liked a project
 export const getUserLikeStatus = async (projectId, userId) => {
@@ -30,6 +31,13 @@ export const toggleLike = async (projectId, userId) => {
   } else {
     await Like.create({ user: userId, project: projectId });
     liked = true;
+    // Notify the project owner
+    createNotification({
+      recipient: project.owner,
+      sender: userId,
+      type: "like",
+      project: projectId,
+    }).catch(() => {}); // fire-and-forget
   }
 
   const totalLikes = await Like.countDocuments({ project: projectId });

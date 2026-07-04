@@ -8,10 +8,12 @@ import morgan from "morgan";
 import authRoutes from "./routes/authRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
+import likeRoutes from "./routes/likeRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 
 import notFound from "./middlewares/notFound.js";
 import errorHandler from "./middlewares/errorHandler.js";
-import likeRoutes from "./routes/likeRoutes.js";
+
 
 const app = express();
 
@@ -87,6 +89,9 @@ app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/comments", commentRoutes);
 
 app.use("/api/v1/likes", likeRoutes);
+
+// Notifications
+app.use("/api/v1/notifications", notificationRoutes);
 
 /* ======================================================
    404 Route Handler

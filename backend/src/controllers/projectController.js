@@ -2,6 +2,8 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import HTTP_STATUS from "../constants/httpStatus.js";
 
+import uploadToCloudinary from "../utils/uploadToCloudinary.js";
+
 import {
   createProject,
   getAllProjects,
@@ -13,7 +15,17 @@ import {
 
 // Create Project
 export const create = asyncHandler(async (req, res) => {
-  const project = await createProject(req.body, req.user._id);
+  const projectData = { ...req.body };
+
+  if (req.files && req.files.length > 0) {
+    const urls = await Promise.all(
+      req.files.map((file) => uploadToCloudinary(file.buffer, "projexa/projects"))
+    );
+    projectData.gallery = urls.map((u) => u.secure_url);
+    projectData.image = projectData.gallery[0];
+  }
+
+  const project = await createProject(projectData, req.user._id);
 
   return res.status(HTTP_STATUS.CREATED).json(
     new ApiResponse(
@@ -65,10 +77,20 @@ export const getMine = asyncHandler(async (req, res) => {
 
 // Update Project
 export const update = asyncHandler(async (req, res) => {
+  const projectData = { ...req.body };
+
+  if (req.files && req.files.length > 0) {
+    const urls = await Promise.all(
+      req.files.map((file) => uploadToCloudinary(file.buffer, "projexa/projects"))
+    );
+    projectData.gallery = urls.map((u) => u.secure_url);
+    projectData.image = projectData.gallery[0];
+  }
+
   const project = await updateProject(
     req.params.id,
     req.user._id,
-    req.body
+    projectData
   );
 
   return res.status(HTTP_STATUS.OK).json(

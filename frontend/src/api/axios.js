@@ -1,7 +1,8 @@
-﻿import axios from 'axios'
+import axios from 'axios'
+import { API_BASE_URL } from './config.js'
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://projexa-backend-vefn.onrender.com/api/v1',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },

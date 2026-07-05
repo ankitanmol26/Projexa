@@ -339,11 +339,17 @@ export default function useAxios() {
   return useMemo(() => apiClient, [])
 }
 '@
+  'src/api/config.js' = @'
+export const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL || 'https://projexa-backend-vefn.onrender.com/api/v1'
+).replace(/\/+$/, '')
+'@
   'src/api/axios.js' = @'
 import axios from 'axios'
+import { API_BASE_URL } from './config.js'
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://projexa-backend-vefn.onrender.com/api/v1',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -465,6 +471,8 @@ export const validateProjectPayload = ({ title, description, githubUrl, liveDemo
 }
 '@
   'src/utils/constants.js' = @'
+import { API_BASE_URL } from '../api/config.js'
+
 export const DEFAULT_TECHNOLOGIES = [
   'React',
   'Node.js',
@@ -476,7 +484,7 @@ export const DEFAULT_TECHNOLOGIES = [
   'TypeScript',
 ]
 
-export const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://projexa-backend-vefn.onrender.com/api/v1'
+export const BASE_URL = API_BASE_URL
 '@
   'src/components/common/Button.jsx' = @'
 export default function Button({ variant = 'primary', className = '', children, ...props }) {

@@ -29,7 +29,7 @@ $files = @{
 }
 '@
   '.env' = @'
-VITE_API_BASE_URL=http://localhost:5000/api/v1
+VITE_API_BASE_URL=https://projexa-backend-vefn.onrender.com/api/v1
 '@
   'tailwind.config.js' = @'
 export default {
@@ -343,7 +343,7 @@ export default function useAxios() {
 import axios from 'axios'
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/v1',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://projexa-backend-vefn.onrender.com/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -476,7 +476,7 @@ export const DEFAULT_TECHNOLOGIES = [
   'TypeScript',
 ]
 
-export const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/v1'
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://projexa-backend-vefn.onrender.com/api/v1'
 '@
   'src/components/common/Button.jsx' = @'
 export default function Button({ variant = 'primary', className = '', children, ...props }) {

@@ -26,7 +26,7 @@ A modern full-stack developer platform where students can showcase projects, bui
 
 ### 🌐 Live Demo
 
-**Coming Soon**
+https://projexa-frontend.onrender.com
 
 ---
 
@@ -111,35 +111,39 @@ It allows users to:
 
 ---
 
+## 🎥 Demo
+
+![Projexa Demo](assets/demo.gif.gif)
+
 # 📸 Screenshots
 
 ## 🏠 Home Page
 
-![](assets/home.png)
+![](assets/home.png.png)
 
 ---
 
 ## 📊 Dashboard
 
-![](assets/dashboard.png)
+![](assets/dashboard.png.png)
 
 ---
 
 ## 📂 My Projects
 
-![](assets/my-projects.png)
+![](assets/my-projects.png.png)
 
 ---
 
 ## 👤 Profile
 
-![](assets/profile.png)
+![](assets/profile.png.png)
 
 ---
 
 ## ⚙️ Settings
 
-![](assets/settings.png)
+![](assets/settings.png.png)
 
 ---
 
